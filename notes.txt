@@ -1,0 +1,38 @@
+HEROKU OAUTH TEST
+-----------------
+
+curl --form client_id=3MVG98SW_UPr.JFihhyeAhFiOZ3bxfmt2i6KifLCEBtLvq5QW1CwEHpffhgUBQ6yjWi4bjzRu3YJJ4hSNJpWf --form client_secret=7443285215880950945 --form grant_type=password --form username=ajena@gpm.herokuapp.com --form password=Log@002inMA0VifdNF9wv19NL9OHVtALT https://login.salesforce.com/services/oauth2/token﻿
+
+
+https://login.salesforce.com/services/oauth2/token﻿?grant_type=password&client_id=3MVG98SW_UPr.JFihhyeAhFiOZ3bxfmt2i6KifLCEBtLvq5QW1CwEHpffhgUBQ6yjWi4bjzRu3YJJ4hSNJpWf&client_secret=7443285215880950945&username=ajena@gpm.herokuapp.com&password=Log@002inMA0VifdNF9wv19NL9OHVtALT
+
+nightly-master-gpm : heroku postgres password = p5u93ah88gskom8kfhppbmvnndo
+
+
+
+sf_log_enabled=TRUE
+sf_log_filepathtype=relative
+sf_log_filepath=sf.log
+sf_log_verbosity=3
+
+For logging, the following property needs to be added to the existing 'lso_sf_conn' file
+
+sf_log_enabled=true
+
+After this, while doing any CData related action, there should be a log file with the name 'lso_sflog.txt' generated along side the excel workbook.
+
+
+lso_ModelN@2016
+
+
+FIND TEXT IN FILE:
+------------------
+grep -Ril "Dracula" .
+find ./ -type f -name "*.xml" -exec grep -il "AJCustomScheme" {} \;
+
+FIND FILE BY NAME:
+------------------
+find -iname "conemu"
+
+ant -Dsf.files=UIResource/**/* deployMnForce
+deploy aj_sf2 UIResource/**/*

@@ -1,0 +1,16 @@
+.gitignore
+
+# iForce related
+iForce_build.xml
+payload
+
+# SF Build related
+InternationalReferencePricing/build/bin/*sf*.properties
+InternationalReferencePricing/build/ui/node_modules/
+InternationalReferencePricing/build/bin/node_modules/
+
+.idea/
+IlluminatedCloud/
+
+advsimulation/api/v1_0/test/.cache/
+advsimulation/api/v1_0/test/mnanytest.py

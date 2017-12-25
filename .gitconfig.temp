@@ -1,0 +1,30 @@
+[user]
+	name = Abhilash Jena
+	email = ajena@modeln.com
+[core]
+	autocrlf = true
+	excludesfile = D:/Users/Abhilash/dev/github/.gitignore
+	editor = D:/Users/Abhilash/dev/scripts/npp.bat
+[color]
+	ui = auto
+[push]
+	default = simple
+[commit]
+	template = c:/Users/ajena/gitcommitmsg.template
+[gui]
+[difftool "sourcetree"]
+	cmd = 'C:/Program Files/Perforce/p4merge.exe' \"$LOCAL\" \"$REMOTE\"
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	required = true
+	clean = git-lfs clean -- %f
+[dummy]
+	name = dummyvalue
+[alias]
+	ignored = !git ls-files -v | grep \"^[[:lower:]]\"
+[diff]
+	tool = meld
+[difftool]
+	prompt = false
+[difftool "meld"]
+    cmd = 'C:/Program Files (x86)/Meld/Meld.exe' "$LOCAL" "$REMOTE"
