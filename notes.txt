@@ -36,3 +36,5 @@ find -iname "conemu"
 
 ant -Dsf.files=UIResource/**/* deployMnForce
 deploy aj_sf2 UIResource/**/*
+
+?nooverride=0

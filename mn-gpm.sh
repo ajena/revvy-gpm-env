@@ -37,6 +37,13 @@ function gitlog() {
     git log -"$n" --date=local --pretty="%C(auto)%h (%<(20,trunc)%aN %cd) %<(100,trunc)%s" $2
 }
 
+function gitamend() {
+   echo
+   echo "git commit -a --amend -no-edit"
+   echo
+   git commit -a --amend --no-edit
+}
+
 function git_ignore() {
     filepath="$1"
     if [ "$filepath" == "" ]
