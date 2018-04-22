@@ -7,6 +7,7 @@ export PATH=$SF_BUILD_ROOT/build/ui/node_modules/grunt-cli/bin:$PATH
 
 alias sf-git="cd /d/Users/Abhilash/dev/github/revvy-gpm"
 alias heroku-git="cd /d/Users/Abhilash/dev/github/revvy-gpm-heroku"
+alias env-git="cd /d/Users/Abhilash/dev/github/revvy-gpm-env"
 alias ws-eclipse="cd /d/Users/Abhilash/dev/workspace/eclipse/"
 
 alias master="git checkout master"
