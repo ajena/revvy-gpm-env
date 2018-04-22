@@ -1,0 +1,271 @@
+-- SET enable_seqscan=true
+
+-- DROP TABLE gpm.mnadvsimulationoutputpart__c
+
+-- CREATE TABLE gpm.mnadvsimulationoutputpart__c AS
+-- SELECT * FROM gpm.mnadvsimulationoutput__c
+-- WHERE mnadvsimulation__c = 'a0W36000003IOfTEAW';
+
+-- DROP INDEX gpm.idx_mnadvsimoutputpart_forecastdate_sim
+-- CREATE INDEX idx_mnadvsimoutputpart_forecastdate_sim
+--     ON gpm.mnadvsimulationoutputpart__c USING btree
+--     (forecastdate__c, mnadvsimulation__c COLLATE pg_catalog."default")
+--     TABLESPACE pg_default;
+    
+-- DROP INDEX gpm.idx_mnadvsimoutputpart_sim_countryorder_cpsku_cpt
+-- CREATE INDEX idx_mnadvsimoutputpart_sim_countryorder_cpsku_cpt
+--     ON gpm.mnadvsimulationoutputpart__c USING btree
+--     (mnadvsimulation__c COLLATE pg_catalog."default", countryorder__c, mncountryproductsku__c COLLATE pg_catalog."default", 
+--      mncountrypricetype__c COLLATE pg_catalog."default")
+--     TABLESPACE pg_default;    
+
+-- DROP INDEX gpm.idx_mnadvsimoutputpart_sim_countryorder_country
+-- CREATE INDEX idx_mnadvsimoutputpart_sim_countryorder_country
+--     ON gpm.mnadvsimulationoutputpart__c
+--     (mnadvsimulation__c, countryorder__c, mncountry__c);
+
+-- DROP INDEX gpm.idx_mnadvsimoutputpart_country
+-- CREATE INDEX idx_mnadvsimoutputpart_country
+--     ON gpm.mnadvsimulationoutputpart__c
+--     (mncountry__c);
+
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c DROP CONSTRAINT mnadvsimulationoutputpart__c_fkey_mncountry
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c
+-- ADD CONSTRAINT mnadvsimulationoutputpart__c_fkey_mncountry
+-- FOREIGN KEY (mncountry__c) 
+-- REFERENCES gpm.mncountry__c(sfid)
+
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c DROP CONSTRAINT mnadvsimulationoutputpart__c_pkey
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c ADD CONSTRAINT mnadvsimulationoutputpart__c_pkey PRIMARY KEY (id);
+
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c DROP COLUMN country_name;
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c DROP COLUMN product_name;
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c DROP COLUMN sku_name;
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c DROP COLUMN sku_strength;
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c DROP COLUMN sku_formulation;
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c DROP COLUMN sku_packsize;
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c DROP COLUMN sku_vialsize;
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c DROP COLUMN channelpricetype;
+
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c ADD COLUMN country_name character varying(80)
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c ADD COLUMN product_name character varying(80)
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c ADD COLUMN sku_name character varying(80)
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c ADD COLUMN sku_strength character varying(80)
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c ADD COLUMN sku_formulation character varying(80)
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c ADD COLUMN sku_packsize character varying(80)
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c ADD COLUMN sku_vialsize character varying(80)
+-- ALTER TABLE gpm.mnadvsimulationoutputpart__c ADD COLUMN channelpricetype character varying(80)
+
+-- DROP INDEX gpm.idx_mnadvsimulationoutputpart_sortorder
+
+-- CREATE INDEX idx_mnadvsimulationoutputpart_sortorder
+--     ON gpm.mnadvsimulationoutputpart__c
+--     (countryorder__c, country_name, product_name, sku_name, sku_strength, sku_packsize, sku_formulation, sku_vialsize, channelpricetype, forecastdate__c)
+
+-- CREATE INDEX idx_mnadvsimulationoutputpart_sortorder
+--     ON gpm.mnadvsimulationoutputpart__c
+--     (countryorder__c, forecastdate__c)
+
+-- DROP INDEX gpm.idx_mnadvsimulationoutput_sortorder
+-- CREATE INDEX idx_mnadvsimulationoutput_sortorder
+--     ON gpm.mnadvsimulationoutput__c
+--     (countryorder__c, forecastdate__c)
+
+-- UPDATE gpm.mnadvsimulationoutputpart__c asop
+-- SET country_name = c.name
+-- FROM gpm.mncountry__c c WHERE asop.mncountry__c = c.sfid
+
+-- UPDATE gpm.mnadvsimulationoutputpart__c asop
+-- SET product_name = p.name
+-- FROM gpm.mnproduct__c p, gpm.mnproductsku__c ps, gpm.mncountryproductsku__c cps 
+-- WHERE asop.mncountryproductsku__c = cps.sfid
+-- AND cps.mnproductsku__c = ps.sfid
+-- AND ps.mnproduct__c = p.sfid
+
+-- UPDATE gpm.mnadvsimulationoutputpart__c asop
+-- SET sku_name = ps.name, sku_strength = ps.strength__c, sku_formulation = ps.formulation__c, sku_packsize = ps.packsize__c, sku_vialsize = ps.vialsize__c
+-- FROM gpm.mnproductsku__c ps, gpm.mncountryproductsku__c cps 
+-- WHERE asop.mncountryproductsku__c = cps.sfid
+-- AND cps.mnproductsku__c = ps.sfid
+
+-- UPDATE gpm.mnadvsimulationoutputpart__c asop
+-- SET channelpricetype = cpt.channelpricetype__c
+-- FROM gpm.mncountrypricetype__c cpt
+-- WHERE asop.mncountrypricetype__c = cpt.sfid
+
+-- SELECT COUNT(1) FROM gpm.mnadvsimulationoutputpart__c WHERE channelpricetype IS NULL
+-- SELECT channelpricetype FROM gpm.mnadvsimulationoutputpart__c
+
+-- EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON)
+-- EXPLAIN ANALYZE
+SELECT simulation_output.id,
+       simulation_output.sfid,
+       simulation_output.currencyisocode,
+--        simulation_output.name,
+--        simulation_output.createdbyid,
+--        simulation_output.lastmodifiedbyid,
+--        simulation_output.lastmodifieddate,
+       simulation_output.mnadvsimulation__c,
+       simulation_output.mnadvsimulationirpevent__c,
+       simulation_output.mnadvsimulationpriceevent__c,
+       simulation_output.baselinenetprice__c,
+       simulation_output.baselinenetrevenue__c,
+       simulation_output.baselinelistprice__c,
+       simulation_output.baselinereferencepricechange__c,
+       simulation_output.baselinerevenue__c,
+       simulation_output.calculatedirpimpact__c,
+       simulation_output.calculatednetirpimpact__c,
+       simulation_output.mncountry__c,
+       simulation_output.mncountrypricetype__c,
+       simulation_output.countryorder__c,
+       simulation_output.mncountryproductsku__c,
+       simulation_output.price__c,
+       simulation_output.referenceprice__c,
+       simulation_output.eventtype__c,
+       simulation_output.forecastdate__c,
+       simulation_output.irpimpact__c,
+       simulation_output.listprice__c,
+       simulation_output.listpriceimpact__c,
+       simulation_output.listpricetype__c,
+       simulation_output.netirpimpact__c,
+       simulation_output.netprice__c,
+       simulation_output.netpriceimpact__c,
+       simulation_output.netrevenueafterimpact__c,
+       simulation_output.netrevenueafterimpactpercent__c,
+       simulation_output.newbaselinereferenceprice__c,
+       simulation_output.newreferenceprice__c,
+       simulation_output.referencepricechange__c,
+       simulation_output.revenueafterimpact__c,
+       simulation_output.revenueafterimpactpercent__c,
+       simulation_output.unitlistprice__c,
+       simulation_output.unitnetprice__c,
+       simulation_output.uom__c,
+       simulation_output.volume__c,
+       simulation_output.published__c,
+--        simulation_output.baselinerevenue__c,
+--        simulation_output.irpimpact__c,
+--        simulation_output.revenueafterimpact__c,
+--        simulation_output.revenueafterimpactpercent__c,
+--        simulation_output.volume__c,
+--        simulation_output.baselinenetrevenue__c,
+--        simulation_output.netirpimpact__c,
+--        simulation_output.netrevenueafterimpact__c,
+--        simulation_output.netrevenueafterimpactpercent__c,
+--        countrypricetype.sfid countrypricetype_sfid,
+--        countrypricetype.name countrypricetype_name,
+--        countrypricetype.currencyisocode countrypricetype_currencyisocode,
+--        countrypricetype.mnchannel__c countrypricetype_mnchannel__c,
+--        countrypricetype.channeldescription__c countrypricetype_channeldescription__c,
+--        countrypricetype.channelname__c countrypricetype_channelname__c,
+       countrypricetype.channelpricetype__c countrypricetype_channelpricetype__c,
+--        countrypricetype.mncountry__c countrypricetype_mncountry__c,
+--        countrypricetype.requiredinpriceapproval__c countrypricetype_requiredinpriceapproval__c,
+--        countrypricetype.includepriceapproval__c countrypricetype_includepriceapproval__c,
+--        countrypricetype.mnpricetype__c countrypricetype_mnpricetype__c,
+--        countrypricetype.pricetypedescription__c countrypricetype_pricetypedescription__c,
+--        countrypricetype.pricetypename__c countrypricetype_pricetypename__c,
+--        countrypricetype.uniqueid__c countrypricetype_uniqueid__c,
+--        countrypricetype.published__c countrypricetype_published__c,
+--        countrypricetype.grosspricetype__c countrypricetype_grosspricetype__c,
+--        countrypricetype.netpricetype__c countrypricetype_netpricetype__c,
+--        countrypricetype.nettolistpriceratio__c countrypricetype_nettolistpriceratio__c,
+       productsku.sfid productsku_sfid,
+       productsku.name productsku_name,
+--        productsku.currencyisocode productsku_currencyisocode,
+--        productsku.activeingredient__c productsku_activeingredient__c,
+--        productsku.autodescription__c productsku_autodescription__c,
+--        productsku.brandname__c productsku_brandname__c,
+--        productsku.equivalentunits__c productsku_equivalentunits__c,
+--        productsku.concentration__c productsku_concentration__c,
+--        productsku.description__c productsku_description__c,
+--        productsku.device__c productsku_device__c,
+       productsku.formulation__c productsku_formulation__c,
+--        productsku.galenicforms__c productsku_galenicforms__c,
+--        productsku.genericname__c productsku_genericname__c,
+--        productsku.inns__c productsku_inns__c,
+--        productsku.nous__c productsku_nous__c,
+--        productsku.optionalfeatures__c productsku_optionalfeatures__c,
+--        productsku.optionalfeaturetypes__c productsku_optionalfeaturetypes__c,
+       productsku.packsize__c productsku_packsize__c,
+--        productsku.pillsize__c productsku_pillsize__c,
+       productsku.mnproduct__c productsku_mnproduct__c,
+--        productsku.productskunumber__c productsku_productskunumber__c,
+--        productsku.qods__c productsku_qods__c,
+--        productsku.referenceorder__c productsku_referenceorder__c,
+       productsku.strength__c productsku_strength__c,
+--        productsku.uniqueid__c productsku_uniqueid__c,
+--        productsku.uods__c productsku_uods__c,
+       productsku.vialsize__c productsku_vialsize__c,
+--        product.sfid product_sfid,
+       product.name product_name,
+--        product.currencyisocode product_currencyisocode,
+--        country.sfid country_sfid,
+       country.name country_name,
+       country.currencyisocode country_currencyisocode,
+       country.mnregion__c country_mnregion__c,
+--        country.attachmenthistory__c country_attachmenthistory__c,
+--        country.availableforadvsimulation__c country_availableforadvsimulation__c,
+--        country.comments__c country_comments__c,
+--        country.documentation__c country_documentation__c,
+       country.isocode__c country_isocode__c,
+--        country.locallymandatedexchangerate__c country_locallymandatedexchangerate__c,
+--        country.managed__c country_managed__c,
+--        country.multicurrencyenabled__c country_multicurrencyenabled__c,
+       country.regionsubregion__c country_regionsubregion__c
+--        ,
+--        country.uniqueid__c country_uniqueid__c,
+--        country.vat__c country_vat__c,
+--        country.verifiedby__c country_verifiedby__c,
+--        country.verifieddate__c country_verifieddate__c,
+--        country.verifiedstate__c country_verifiedstate__c
+-- FROM gpm.mnadvsimulationoutputpart__c simulation_output,
+FROM gpm.mnadvsimulationoutput__c simulation_output,
+     gpm.mncountryproductsku__c countryproductsku,
+     gpm.mncountrypricetype__c countrypricetype,
+     gpm.mnproductsku__c productsku,
+     gpm.mnproduct__c product,
+     gpm.mncountry__c country,
+     gpm.mnpricetype__c pricetype
+WHERE simulation_output.mnadvsimulation__c = 'a0W36000003IOfTEAW'
+  AND simulation_output.mncountryproductsku__c = countryproductsku.sfid
+  AND simulation_output.mncountrypricetype__c = countrypricetype.sfid
+  AND simulation_output.mncountry__c = country.sfid
+  AND simulation_output.listpricetype__c = TRUE
+  AND countryproductsku.mnproductsku__c = productsku.sfid
+  AND productsku.mnproduct__c = product.sfid
+  AND countrypricetype.mnpricetype__c = pricetype.sfid
+  AND simulation_output.listpricetype__c = TRUE
+ORDER BY simulation_output.countryorder__c NULLS LAST
+--   , country.name NULLS LAST
+--   , product.name NULLS LAST
+--   , productsku.name NULLS LAST
+--   , productsku.strength__c NULLS LAST
+--   , productsku.packsize__c NULLS LAST
+--   , productsku.formulation__c NULLS LAST
+--   , productsku.vialsize__c NULLS LAST
+--   , countrypricetype.channelpricetype__c NULLS LAST
+--   , simulation_output.uom__c NULLS LAST
+  , simulation_output.forecastdate__c NULLS LAST
+
+-- ORDER BY
+--   simulation_output.countryorder__c NULLS LAST
+--   , simulation_output.country_name NULLS LAST
+--   , simulation_output.product_name NULLS LAST
+--   , simulation_output.sku_name NULLS LAST
+--   , simulation_output.sku_strength NULLS LAST
+--   , simulation_output.sku_packsize NULLS LAST
+--   , simulation_output.sku_formulation NULLS LAST
+--   , simulation_output.sku_vialsize NULLS LAST
+--   , simulation_output.channelpricetype NULLS LAST
+--   , simulation_output.forecastdate__c NULLS LAST
+
+offset 0 LIMIT 3000
+
+-- VACUUM
+-- ANALYZE gpm.mncountry__c;
+-- ANALYZE gpm.mnproduct__c;
+-- ANALYZE gpm.mnproductsku__c;
+-- ANALYZE gpm.mncountryproductsku__c;
+-- ANALYZE gpm.mnpricetype__c;
+-- ANALYZE gpm.mncountrypricetype__c;
+-- ANALYZE gpm.mnadvsimulationoutput__c;
