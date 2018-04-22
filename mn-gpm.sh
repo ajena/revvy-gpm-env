@@ -1,18 +1,20 @@
+source env-setup.sh
+
 export git_topdir=""
 export HISTTIMEFORMAT="%d/%m/%y %T "
 export LC_ALL="en_US.UTF-8"
 
-export SF_BUILD_ROOT="/d/Users/Abhilash/dev/github/revvy-gpm/InternationalReferencePricing"
+export SF_BUILD_ROOT=$DEV_ROOT/github/revvy-gpm/InternationalReferencePricing
 export PATH=$SF_BUILD_ROOT/build/ui/node_modules/grunt-cli/bin:$PATH
 
-alias sf-git="cd /d/Users/Abhilash/dev/github/revvy-gpm"
-alias heroku-git="cd /d/Users/Abhilash/dev/github/revvy-gpm-heroku"
-alias env-git="cd /d/Users/Abhilash/dev/github/revvy-gpm-env"
-alias ws-eclipse="cd /d/Users/Abhilash/dev/workspace/eclipse/"
+alias sf-git="cd $DEV_ROOT/github/revvy-gpm"
+alias heroku-git="cd $DEV_ROOT/github/revvy-gpm-heroku"
+alias env-git="cd $DEV_ROOT/github/revvy-gpm-env"
+alias ws-eclipse="cd $DEV_ROOT/workspace/eclipse/"
 
 alias master="git checkout master"
 
-alias meld="/D/Users/Abhilash/dev/tools/diff/Meld/Meld.exe"
+alias meld="$DEV_ROOT/tools/diff/Meld/Meld.exe"
 
 function logs_heroku() {
     appname="$1"
