@@ -115,17 +115,28 @@ BEGIN
         RAISE NOTICE 'Script: %', script_text;
 		EXECUTE script_text;            
     END;
-			
-	-- RAISE NOTICE 'Add simulation_createddate column to output table';
-	-- EXECUTE ' ALTER TABLE gpm.' || master_table_name
-	--      || ' ADD COLUMN ' || date_range_part_col_name || ' timestamp without time zone';
-			
-	-- RAISE NOTICE 'Update simulation_createddate column';
-	-- EXECUTE ' UPDATE gpm.' || master_table_name || ' aso '
-	--      || ' SET ' || date_range_part_col_name || ' = asim.createddate '
-	--      || ' FROM gpm.' || sf_namespace || 'mnadvsimulation__c asim '
-	--      || ' WHERE aso.' || sf_namespace || 'mnadvsimulation__c = asim.sfid';
-		 
+	
+    --  4. Add column mnadvsimcreateddate__c to mnadvsimulationoutput__c to capture the simulation scenario creation date. 
+    --     This new column will act as the partition key for the quarterly range partition.
+	RAISE NOTICE 'Adding column % to %', date_range_part_col_name, master_table_name;
+    BEGIN
+	    script_text := 'ALTER TABLE gpm.' || master_table_name || ' '
+	                || 'ADD COLUMN ' || date_range_part_col_name || ' timestamp without time zone';
+        RAISE NOTICE 'Script: %', script_text;
+	    EXECUTE script_text;
+	END;
+    
+    --  5. Update this column with appropriate value by joining mnadvsimulation__c table.
+	RAISE NOTICE 'Updating column %', date_range_part_col_name;
+    BEGIN
+        script_text := 'UPDATE gpm.' || master_table_name || ' aso '
+	                || 'SET ' || date_range_part_col_name || ' = asim.createddate '
+	                || 'FROM gpm.' || sf_namespace || 'mnadvsimulation__c asim '
+	                || 'WHERE aso.' || sf_namespace || 'mnadvsimulation__c = asim.sfid';
+        RAISE NOTICE 'Script: %', script_text;
+	    EXECUTE script_text;
+	END;
+         
 	-- RAISE NOTICE 'Create a copy of this new table with simulation_createddate column';
 	-- EXECUTE ' DROP TABLE IF EXISTS gpm.' || master_table_name || '_ext';
 	-- EXECUTE ' CREATE TABLE gpm.' || master_table_name || '_ext AS '
@@ -224,5 +235,4 @@ $PARTITION_MNADVSIMULATIONOUTPUT$ LANGUAGE plpgsql;
 -- select count(*) from gpm.mnadvsimulationoutput__c_20174
 -- select count(*) from gpm.mnadvsimulationoutput__c_20181
 -- select count(*) from gpm.mnadvsimulationoutput__c_20182
-
 
