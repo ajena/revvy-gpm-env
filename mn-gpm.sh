@@ -1,5 +1,3 @@
-source env-setup.sh
-
 export git_topdir=""
 export HISTTIMEFORMAT="%d/%m/%y %T "
 export LC_ALL="en_US.UTF-8"
@@ -21,10 +19,14 @@ function logs_heroku() {
 	if [ "$appname" == "" ]
         then appname="dev10-gpm"
     fi
+	numoflines="$2"
+	if [ "$numoflines" == "" ]
+        then numoflines="100"
+    fi
     echo
-    echo "heroku logs -t -a $appname"
+    echo "heroku logs -t -a $appname -n $numoflines"
 	echo
-	heroku logs -t -a $appname
+	heroku logs -t -a $appname -n $numoflines
 }
 
 function gitlog() {
