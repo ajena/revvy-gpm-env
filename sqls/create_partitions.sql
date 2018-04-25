@@ -44,12 +44,12 @@ $$ LANGUAGE plpgsql;
 --  5. Update this column with appropriate value by joining mnadvsimulation__c table.
 --  6. At this point create another backup table mnadvsimulationoutput__c_ext from mnadvsimulationoutput__c. 
 --     We'll use this new table as the source table to insert records into mnadvsimulationoutput__c after creating partitions and INSERT rules.
---  7. TRUNCATE mnadvsimulationoutput__c table.
---  8. Starting from the earliest quarter(based on least createddate in mnadvsimulation__c table) till current quarter,
+--  7. Starting from the earliest quarter(based on least createddate in mnadvsimulation__c table) till current quarter,
 --     - create child tables of mnadvsimulationoutput__c master table.
 --     - create PK, Unique Key constraints
 --     - create appropriate indexes
 --     - create INSERT RULEs for each child table created
+--  8. TRUNCATE mnadvsimulationoutput__c table.
 --  9. Now copy everything from mnadvsimulationoutput__c_ext to mnadvsimulationoutput__c table.
 -- 10. Verify that there are zero records in 'ONLY mnadvsimulationoutput__c' table.
 -- 11. DROP all constraints and indexes from mnadvsimulationoutput__c table.
@@ -76,6 +76,7 @@ DECLARE
     partition_next_start_date DATE;
     master_table_name VARCHAR := sf_namespace || 'mnadvsimulationoutput__c';
     master_table_short_name VARCHAR := 'mnadvsimoutput';
+    master_ext_table_name VARCHAR := master_table_name || '_ext';
     date_range_part_col_name VARCHAR := sf_namespace || 'mnadvsimcreateddate__c';
     child_table_name VARCHAR;
     child_table_name_for_index VARCHAR;
@@ -136,14 +137,21 @@ BEGIN
         RAISE NOTICE 'Script: %', script_text;
 	    EXECUTE script_text;
 	END;
-         
-	-- RAISE NOTICE 'Create a copy of this new table with simulation_createddate column';
-	-- EXECUTE ' DROP TABLE IF EXISTS gpm.' || master_table_name || '_ext';
-	-- EXECUTE ' CREATE TABLE gpm.' || master_table_name || '_ext AS '
-	--      || ' SELECT * FROM gpm.' || master_table_name;
-		 
-	-- RAISE NOTICE 'Delete all record from mnadvsimulationoutput__c table. After creation of child tables and insert rule/trigger, we''ll populate records using backed up from mnadvsimulationtoutput_ext table';
-	-- EXECUTE 'TRUNCATE TABLE gpm.' || master_table_name;
+    
+    --  6. At this point create another backup table mnadvsimulationoutput__c_ext from mnadvsimulationoutput__c. 
+    --     We'll use this new table as the source table to insert records into mnadvsimulationoutput__c after creating partitions and INSERT rules.
+	RAISE NOTICE 'Creating a copy of % with % AS %', master_table_name, date_range_part_col_name, master_ext_table_name;
+	BEGIN
+	    script_text := 'DROP TABLE IF EXISTS gpm.' || master_ext_table_name;
+	    RAISE NOTICE 'Script: %', script_text;
+	    EXECUTE script_text;
+
+	    script_text := 'CREATE TABLE gpm.' || master_ext_table_name || ' AS '
+	                || 'SELECT * FROM gpm.' || master_table_name;
+	    RAISE NOTICE 'Script: %', script_text;
+	    EXECUTE script_text;
+	END;
+
 
 	-- RAISE NOTICE 'Creation of child tables';
 
@@ -215,6 +223,14 @@ BEGIN
 	-- END LOOP;
 
 	-- RAISE NOTICE 'Partitions created till year & quarter : %', curr_year || ' ' || curr_quarter;
+
+	--  8. TRUNCATE mnadvsimulationoutput__c table.
+	RAISE NOTICE 'Deleting all records from %. After creation of child tables and insert rules, records be re-inserted using back up from %', master_table_name, master_ext_table_name;
+	BEGIN
+	    script_text := 'TRUNCATE TABLE gpm.' || master_table_name;
+	    RAISE NOTICE 'Script: %', script_text;
+	    EXECUTE script_text;
+	END;
 
 	-- RAISE NOTICE 'Copy backed up data'
 	-- EXECUTE 'INSERT INTO gpm.' || master_table_name || ' SELECT * FROM gpm.' || master_table_name || '_ext';
