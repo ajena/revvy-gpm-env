@@ -207,7 +207,7 @@ BEGIN
 
 
     --  8. Create Indexes, INSERT rules and CHECK constraints.
-    RAISE NOTICE '%: Creating INSERT Rules and Check constraints.', timeofday();
+    RAISE NOTICE '%: Creating Indexes, INSERT Rules and CHECK constraints.', timeofday();
     -- Reset variables for re-iteration
     start_year := EXTRACT(YEAR FROM min_createddate);
     start_quarter := EXTRACT(QUARTER FROM min_createddate);
