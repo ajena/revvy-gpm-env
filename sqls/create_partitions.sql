@@ -23,7 +23,7 @@ $$ LANGUAGE plpgsql;
 -- NOTE: Tables are created in the gpm schema.
 --
 -- STEPS:
---  1. Pause INSERT/DELETE on mnadvsimulation__c table.
+--  1. Pause INSERT/DELETE on mnadvsimulationoutput__c table.
 --  2. Verify that all records in mnadvsimulation__c has a createddate.
 --  3. Create a backup of mnadvsimulationoutput__c table.
 --     Name the new table like this - mnadvsimulationoutput__c_bak_<current_datetime>.
@@ -37,7 +37,7 @@ $$ LANGUAGE plpgsql;
 --  8. Create Indexes, INSERT rules and CHECK constraints.
 --  9. Rename tables so that mnadvsimulation__c_new becomes mnadvsimulation__c
 -- 10. Turn on constraint_exclusion.
--- 11. Resume INSERT/DELETE on mnadvsimulation__c table.
+-- 11. Resume INSERT/DELETE on mnadvsimulationoutput__c table.
 --
 DO $PARTITION_MNADVSIMULATIONOUTPUT$
 DECLARE
@@ -74,7 +74,7 @@ BEGIN
     END IF;
 
 
-    --  1. Pause INSERT/DELETE on mnadvsimulation__c table.
+    --  1. Pause INSERT/DELETE on mnadvsimulationoutput__c table.
     RAISE NOTICE '%: Pausing INSERT/DELETE on %', timeofday(), master_table_name;
     script_text := 'CREATE RULE ' || master_table_name || '_insert_disable AS ON INSERT TO gpm.' || master_table_name || ' DO INSTEAD NOTHING';
     RAISE NOTICE '%: %', timeofday(), script_text;
@@ -298,7 +298,7 @@ BEGIN
     SET constraint_exclusion = on;
 
 
-    -- 11. Resume INSERT/DELETE on mnadvsimulation__c table.
+    -- 11. Resume INSERT/DELETE on mnadvsimulationoutput__c table.
     RAISE NOTICE '%: Resuming INSERT/DELETE on %', timeofday(), master_table_name;
     script_text := 'DROP RULE ' || master_table_name || '_insert_disable ON gpm.' || master_table_name || '_old';
     RAISE NOTICE '%: %', timeofday(), script_text;
