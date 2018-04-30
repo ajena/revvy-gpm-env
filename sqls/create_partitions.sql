@@ -42,7 +42,7 @@ $$ LANGUAGE plpgsql;
 DO $PARTITION_MNADVSIMULATIONOUTPUT$
 DECLARE
     -- MUST READ: If the SFDC Org has namespace, you must specify it with ALL lowercase and double underscores, for example: 'gpmnightly__'
-    sf_namespace VARCHAR := 'mnirp__';
+    sf_namespace VARCHAR := '';
 
     min_createddate TIMESTAMP;
     start_year INTEGER;
@@ -169,6 +169,11 @@ BEGIN
                     || 'WHERE ' || part_data_sel_date_constraint_text;
         RAISE NOTICE '%: %', timeofday(), script_text;
         EXECUTE script_text;
+
+        -- Count rows
+        script_text := 'SELECT COUNT(id) FROM gpm.' || child_table_name;
+        EXECUTE script_text INTO row_count;
+        RAISE NOTICE '%: % rows inserted.', timeofday(), row_count;
 
         -- Increment Quarter
         start_quarter := start_quarter + 1;
