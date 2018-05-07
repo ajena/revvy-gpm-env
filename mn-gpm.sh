@@ -38,7 +38,7 @@ function gitlog() {
     echo
     git status
     echo
-    
+
     git log -"$n" --date=local --pretty="%C(auto)%h (%<(20,trunc)%aN %cd) %<(100,trunc)%s" $2
 }
 
@@ -60,7 +60,7 @@ function git_ignore() {
 
 	echo
     echo "git update-index --assume-unchanged $filepath"
-    
+
     git update-index --assume-unchanged $filepath
 }
 
@@ -145,16 +145,16 @@ function prepareUI() {
 function invokeAntTask() {
     # Check for required number of arguments
     if [ "$#" -lt 2 ]
-        then 
+        then
         echo
         echo "USAGE: invokeAntTask [cleanMnForce|deployMnForce|deployAndTestMnForce|importAll|deleteAll] <sf.propfile_name>"
         echo "E.g., invokeAntTask deployMnForce aj_sf"
         return
     fi
-    
+
     # Check for valid ant target
     if [ "$1" != "cleanMnForce" ] && [ "$1" != "deployMnForce" ] && [ "$1" != "deployAndTestMnForce" ] && [ "$1" != "importAll" ] && [ "$1" != "deleteAll" ] && [ "$1" != "prepareUI" ]
-        then 
+        then
         echo
         echo "Invalid ant target '$1'"
         echo "USAGE: invokeAntTask [cleanMnForce|deployMnForce|deployAndTestMnForce|importAll|deleteAll|prepareUI] <sf.propfile_name>"
@@ -169,7 +169,7 @@ function invokeAntTask() {
 		echo "Execute the command from a valid git repository."
 		return
 	fi
-	
+
 	# Cache pwd
 	cached_pwd=$(pwd)
 
@@ -189,7 +189,7 @@ function invokeAntTask() {
         echo
         eval "ant -Dsf.propfile=$2 -Dsf.files=$3 $1"
     fi
-	
+
 	# Change the directory to the cached pwd
 	eval "cd $cached_pwd"
 }

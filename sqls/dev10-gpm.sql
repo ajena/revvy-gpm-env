@@ -165,6 +165,12 @@ ORDER BY
   simulation_output.forecastdate__c NULLS LAST
 LIMIT 325
 
+SELECT
+  asim.name, asim.status__c, asim.errormessage__c
+FROM
+  gpm.mnadvsimulation__c asim
+ORDER BY
+  asim.lastmodifieddate DESC
 
 
 
