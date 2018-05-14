@@ -1,6 +1,11 @@
 -- SELECT COUNT(1) FROM gpm.mnadvsimulationoutput__c;
 -- 2,152
 
+-- SELECT COUNT(1) FROM ONLY gpm.mnadvsimulationoutput__c;
+-- 0
+
+-- SELECT 1 FROM ONLY gpm.mnadvsimulationoutput__c;
+
 -- SELECT to_char(asim.createddate, 'YYYYQ'), COUNT(aso.id)
 -- FROM   gpm.mnadvsimulationoutput__c aso
 --        , gpm.mnadvsimulation__c asim
@@ -173,46 +178,47 @@
 --   asim.lastmodifieddate DESC
 
 
-SELECT 
-  country.name AS "Country",
-  --productsku.name AS "Product SKU",
-  countrypricetype.channelpricetype__c AS "Channel Price Type",
-  simulation_output.listpricetype__c AS "Is List Price Type",
-  simulation_output.listprice__c || ' ' || simulation_output.currencyisocode AS "List Price",
-  simulation_output.revenueafterimpact__c || ' ' || simulation_output.currencyisocode AS "Gross Revenue",
-  simulation_output.netprice__c || ' ' || simulation_output.currencyisocode AS "Net Price",
-  simulation_output.netrevenueafterimpact__c || ' ' || simulation_output.currencyisocode AS "Net Revenue"
-FROM 
-  gpm.mnadvsimulationoutput__c simulation_output, 
-  gpm.mncountryproductsku__c countryproductsku, 
-  gpm.mncountrypricetype__c countrypricetype, 
-  gpm.mnproductsku__c productsku, 
-  gpm.mnproduct__c product, 
-  gpm.mncountry__c country 
-WHERE 
-  simulation_output.mnadvsimulation__c = 'a0P3700000CSgRsEAL'
-  AND simulation_output.mncountryproductsku__c = countryproductsku.sfid 
-  AND simulation_output.mncountrypricetype__c = countrypricetype.sfid 
-  AND simulation_output.mncountry__c = country.sfid 
-  AND countryproductsku.mnproductsku__c = productsku.sfid 
-  AND productsku.mnproduct__c = product.sfid 
-  --AND simulation_output.listpricetype__c = true
-  AND simulation_output.forecastdate__c = '2018-03-16'
-ORDER BY
-  simulation_output.countryorder__c NULLS LAST,
-  country.name NULLS LAST,
-  product.name NULLS LAST,
-  productsku.name NULLS LAST,
-  productsku.strength__c NULLS LAST,
-  productsku.packsize__c NULLS LAST,
-  productsku.formulation__c NULLS LAST,
-  productsku.vialsize__c NULLS LAST,
-  countrypricetype.channelpricetype__c NULLS LAST,
-  simulation_output.uom__c NULLS LAST,
-  simulation_output.forecastdate__c NULLS LAST
-LIMIT 325
+-- SELECT 
+--   country.name AS "Country",
+--   --productsku.name AS "Product SKU",
+--   countrypricetype.channelpricetype__c AS "Channel Price Type",
+--   simulation_output.listpricetype__c AS "Is List Price Type",
+--   simulation_output.listprice__c || ' ' || simulation_output.currencyisocode AS "List Price",
+--   simulation_output.revenueafterimpact__c || ' ' || simulation_output.currencyisocode AS "Gross Revenue",
+--   simulation_output.netprice__c || ' ' || simulation_output.currencyisocode AS "Net Price",
+--   simulation_output.netrevenueafterimpact__c || ' ' || simulation_output.currencyisocode AS "Net Revenue"
+-- FROM 
+--   gpm.mnadvsimulationoutput__c simulation_output, 
+--   gpm.mncountryproductsku__c countryproductsku, 
+--   gpm.mncountrypricetype__c countrypricetype, 
+--   gpm.mnproductsku__c productsku, 
+--   gpm.mnproduct__c product, 
+--   gpm.mncountry__c country 
+-- WHERE 
+--   simulation_output.mnadvsimulation__c = 'a0P3700000CSgRsEAL'
+--   AND simulation_output.mncountryproductsku__c = countryproductsku.sfid 
+--   AND simulation_output.mncountrypricetype__c = countrypricetype.sfid 
+--   AND simulation_output.mncountry__c = country.sfid 
+--   AND countryproductsku.mnproductsku__c = productsku.sfid 
+--   AND productsku.mnproduct__c = product.sfid 
+--   --AND simulation_output.listpricetype__c = true
+--   AND simulation_output.forecastdate__c = '2018-03-16'
+-- ORDER BY
+--   simulation_output.countryorder__c NULLS LAST,
+--   country.name NULLS LAST,
+--   product.name NULLS LAST,
+--   productsku.name NULLS LAST,
+--   productsku.strength__c NULLS LAST,
+--   productsku.packsize__c NULLS LAST,
+--   productsku.formulation__c NULLS LAST,
+--   productsku.vialsize__c NULLS LAST,
+--   countrypricetype.channelpricetype__c NULLS LAST,
+--   simulation_output.uom__c NULLS LAST,
+--   simulation_output.forecastdate__c NULLS LAST
+-- LIMIT 325
 
 
+create table gpm.mnadvsimulationoutput__c_old_copy
+(like gpm.mnadvsimulationoutput__c_old including defaults)
 
-
-
+alter table gpm.mnadvsimulationoutput__c_old rename to mnadvsimulationoutput__c

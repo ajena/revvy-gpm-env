@@ -107,7 +107,7 @@ BEGIN
     --  4. Create a new table (without data) from mnadvsimulationoutput__c table.
     RAISE NOTICE '%: Creating a structural copy of %', timeofday(), master_table_name;
     script_text := 'CREATE TABLE gpm.' || new_master_table_name
-                || '(LIKE gpm.' || master_table_name || ')';
+                || '(LIKE gpm.' || master_table_name || ' INCLUDING DEFAULTS)';
     RAISE NOTICE '%: %', timeofday(), script_text;
     EXECUTE script_text;
 
