@@ -53,7 +53,7 @@ DECLARE
     partition_next_start_date DATE;
     sim_table_name VARCHAR := sf_namespace || 'mnadvsimulation__c';
     sim_table_fk_name VARCHAR := sf_namespace || 'mnadvsimulation__c';
-    master_table_name VARCHAR := sf_namespace || 'mnadvsimulationoutput__c_testmnirp';
+    master_table_name VARCHAR := sf_namespace || 'mnadvsimulationoutput__c';
     master_table_part_col_name VARCHAR := 'createddate';
     new_master_table_name VARCHAR := master_table_name || '_new';
     master_table_short_name VARCHAR := 'mnadvsimoutput';
