@@ -1,5 +1,5 @@
 -- SELECT COUNT(id) FROM gpm.mnadvsimulationoutput__c;
--- 2,334
+-- 2,503
 
 -- SELECT COUNT(id) FROM ONLY gpm.mnadvsimulationoutput__c;
 -- 0
@@ -216,8 +216,12 @@
 -- LIMIT 325
 
 
--- create table gpm.mnadvsimulationoutput__c_old_copy
--- (like gpm.mnadvsimulationoutput__c_old including defaults)
+-- create table gpm.mnadvsimulationoutput__c_old_copy (like gpm.mnadvsimulationoutput__c_old including defaults)
+
+create table gpm.mnadvsimulationoutput__c_copy (
+    constraint mnadvsimulationoutput__c_pk primary key (id),
+    like gpm.mnadvsimulationoutput__c including defaults
+)
 
 -- alter table gpm.mnadvsimulationoutput__c_old rename to mnadvsimulationoutput__c
 
@@ -226,18 +230,18 @@ select createddate from gpm.mnadvsimulation__c where sfid = 'a0P3700000CSgRsEAL'
 
 set constraint_exclusion = partition
 
-explain analyze select * from gpm.mnadvsimulationoutput__c 
+explain select * from gpm.mnadvsimulationoutput__c 
 where mnadvsimulation__c = 'a0P3700000CSgRsEAL'
 
-explain analyze select * from gpm.mnadvsimulationoutput__c 
+explain select * from gpm.mnadvsimulationoutput__c 
 where mnadvsimulation__c = 'a0P3700000CSgRsEAL'
 and mnadvsimcreateddate__c = '2018-05-08 03:42:52'
 
-explain analyze select * from gpm.mnadvsimulationoutput__c 
+explain select * from gpm.mnadvsimulationoutput__c 
 where mnadvsimulation__c = 'a0P3700000CSgRsEAL'
 and mnadvsimcreateddate__c >= '2018-04-01'
 
-explain analyze select * from gpm.mnadvsimulationoutput__c 
+explain select * from gpm.mnadvsimulationoutput__c 
 where mnadvsimulation__c = 'a0P3700000CSgRsEAL'
 and mnadvsimcreateddate__c >= '2018-04-01' and mnadvsimcreateddate__c < '2018-07-01'
 
@@ -245,4 +249,32 @@ explain select count(*) from gpm.mnadvsimulationoutput__c
 where mnadvsimcreateddate__c >= '2018-04-01'
 
 show constraint_exclusion
+
+
+drop table if exists test.mnadvsim cascade;
+create table test.mnadvsim (
+    id serial not null,
+    name character varying(100),
+    createddate timestamp without time zone,
+    constraint mnadvsim_pk primary key (id)
+);
+
+CREATE TABLE test.mnadvsim_2017q4 (
+    constraint mnadvsim_2017q4_pk primary key (id),
+    constraint mnadvsim_2017q4_ck CHECK ( createddate >= DATE '2017-10-01' AND createddate < DATE '2018-01-01' )
+) INHERITS (test.mnadvsim);
+
+CREATE TABLE test.mnadvsim_2018q1 (
+    constraint mnadvsim_2018q1_pk primary key (id),
+    constraint mnadvsim_2018q1_ck CHECK ( createddate >= DATE '2018-01-01' AND createddate < DATE '2018-04-01' )
+) INHERITS (test.mnadvsim);
+
+CREATE TABLE test.mnadvsim_2018q2 (
+    constraint mnadvsim_2018q2_pk primary key (id),
+    constraint mnadvsim_2018q2_ck CHECK ( createddate >= DATE '2018-04-01' AND createddate < DATE '2018-07-01' )
+) INHERITS (test.mnadvsim);
+
+
+explain analyze select count(*) from test.mnadvsim
+where createddate = '2018-05-10'
 

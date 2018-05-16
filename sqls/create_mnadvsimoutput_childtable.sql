@@ -19,20 +19,24 @@ EXCEPTION WHEN OTHERS THEN
 END;
 $$ LANGUAGE plpgsql;
 
+
 CREATE OR REPLACE FUNCTION gpm.create_mnadvsimoutput_childtable_if_not_exists() RETURNS void AS $$
 DECLARE
-    schema_name VARCHAR := 'gpm';
+    -- MUST READ: If the SFDC Org has namespace, you must specify it with ALL lowercase and double underscores, for example: 'gpmnightly__'
     sf_namespace VARCHAR := '';
+
+    schema_name VARCHAR := 'gpm';
     curr_year INTEGER := extract(year FROM now());
     curr_quarter INTEGER := extract(quarter FROM now());
     partition_start_date DATE;
     partition_next_start_date DATE;
     sim_table_name VARCHAR := sf_namespace || 'mnadvsimulation__c';
     sim_table_fk_name VARCHAR := sf_namespace || 'mnadvsimulation__c';
-    master_table_name VARCHAR := sf_namespace || 'mnadvsimulationoutput__c_testmnirp';
+    master_table_name VARCHAR := sf_namespace || 'mnadvsimulationoutput__c';
     master_table_part_col_name VARCHAR := 'createddate';
     master_table_short_name VARCHAR := 'mnadvsimoutput';
     date_range_part_col_name VARCHAR := sf_namespace || 'mnadvsimcreateddate__c';
+    constraint_text_format VARCHAR := '%s >= DATE ''%s'' AND %s < DATE ''%s''';
     check_constraint_text VARCHAR;
     part_data_sel_date_constraint_text VARCHAR;
     child_table_name VARCHAR;
@@ -51,16 +55,13 @@ BEGIN
         AND    tab.table_name = child_table_name
     ) THEN
 
-        partition_start_date = TO_CHAR(TO_DATE(curr_year || '-' || (((curr_quarter - 1) * 3) + 1) || '-1', 'YYYY-MM-DD'), 'YYYY-MM-DD');
+        partition_start_date = start_year || '-' || (((start_quarter - 1) * 3) + 1) || '-1';
         partition_next_start_date = TO_CHAR(partition_start_date + interval '3 months', 'YYYY-MM-DD');
-        check_constraint_text := date_range_part_col_name || ' >= TO_DATE(''' || partition_start_date || ''', ''YYYY-MM-DD'') '
-                              || 'AND ' || date_range_part_col_name || ' < TO_DATE(''' || partition_next_start_date || ''', ''YYYY-MM-DD'')';
+        check_constraint_text := FORMAT(constraint_text_format, date_range_part_col_name, partition_start_date, date_range_part_col_name, partition_next_start_date);
 
-        -- Create child table (with PK and Check constraints)
+        -- Create child table (with Check constraints)
         RAISE NOTICE '%: Creating child table %',  timeofday(), child_table_name;
         script_text := 'CREATE TABLE gpm.' || child_table_name || '('
-                    -- PK Constraint
-                    || 'CONSTRAINT ' || child_table_name || '_pkey PRIMARY KEY (id), '
                     || 'CONSTRAINT ' || child_table_name || '_ck CHECK('
                     || check_constraint_text || ')'
                     || ') INHERITS (gpm.' || master_table_name || ')';
@@ -91,14 +92,6 @@ BEGIN
             || sim_table_fk_name,
             'idx_' || child_table_name_for_index || '_forecastdate_sim'
         );
-        RAISE NOTICE '%: Creating Index - %', timeofday(), 'idx_' || child_table_name_for_index || '_partkey ON ' || child_table_name
-                                        || '(' || date_range_part_col_name || ')';
-        PERFORM gpm.create_index_if_not_exists(
-            'btree',
-            child_table_name,
-            date_range_part_col_name,
-            'idx_' || child_table_name_for_index || '_partkey'
-        );
 
         -- Create INSERT Rule
         RAISE NOTICE '%: Creating INSERT rule.', timeofday();
@@ -119,10 +112,8 @@ EXCEPTION WHEN OTHERS THEN
 END;
 $$ LANGUAGE plpgsql;
 
-DO $$
-BEGIN
-    PERFORM gpm.create_mnadvsimoutput_childtable_if_not_exists();
-END
-$$ LANGUAGE plpgsql;
-
---DROP TABLE gpm.mnadvsimulationoutput__c_testmnirp_2018q3 CASCADE;
+-- DO $$
+-- BEGIN
+--     PERFORM gpm.create_mnadvsimoutput_childtable_if_not_exists();
+-- END
+-- $$ LANGUAGE plpgsql;

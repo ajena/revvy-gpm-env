@@ -57,6 +57,7 @@ DECLARE
     new_master_table_name VARCHAR := master_table_name || '_new';
     master_table_short_name VARCHAR := 'mnadvsimoutput';
     date_range_part_col_name VARCHAR := sf_namespace || 'mnadvsimcreateddate__c';
+    constraint_text_format VARCHAR := '%s >= DATE ''%s'' AND %s < DATE ''%s''';
     check_constraint_text VARCHAR;
     part_data_sel_date_constraint_text VARCHAR;
     child_table_name VARCHAR;
@@ -105,8 +106,10 @@ BEGIN
 
     --  4. Create a new table (without data) from mnadvsimulationoutput__c table.
     RAISE NOTICE '%: Creating a structural copy of %', timeofday(), master_table_name;
-    script_text := 'CREATE TABLE gpm.' || new_master_table_name
-                || '(LIKE gpm.' || master_table_name || ' INCLUDING DEFAULTS)';
+    script_text := 'CREATE TABLE gpm.' || new_master_table_name || '('
+                || 'CONSTRAINT ' || master_table_name || '_pk PRIMARY KEY (id),'
+                || 'LIKE gpm.' || master_table_name || ' INCLUDING DEFAULTS'
+                || ')';
     RAISE NOTICE '%: %', timeofday(), script_text;
     EXECUTE script_text;
 
@@ -141,26 +144,20 @@ BEGIN
 
     RAISE NOTICE '%: Creating child tables starting from year & quarter : %', timeofday(), start_year || ' Q' || start_quarter;
     WHILE (start_year * 10 + start_quarter) <= (curr_year * 10 + curr_quarter) LOOP
-        partition_start_date = TO_CHAR(TO_DATE(start_year || '-' || (((start_quarter - 1) * 3) + 1) || '-1', 'YYYY-MM-DD'), 'YYYY-MM-DD');
+        partition_start_date = start_year || '-' || (((start_quarter - 1) * 3) + 1) || '-1';
         partition_next_start_date = TO_CHAR(partition_start_date + interval '3 months', 'YYYY-MM-DD');
-
-        check_constraint_text := date_range_part_col_name || ' >= TO_DATE(''' || partition_start_date || ''', ''YYYY-MM-DD'') '
-                              || 'AND ' || date_range_part_col_name || ' < TO_DATE(''' || partition_next_start_date || ''', ''YYYY-MM-DD'')';
 
         -- Create child table
         child_table_name := master_table_name || '_' || start_year || 'q' || start_quarter;
         RAISE NOTICE '%: Creating child table', timeofday();
         script_text := 'CREATE TABLE gpm.' || child_table_name || '('
-                    -- PK Constraint
-                    || 'CONSTRAINT ' || child_table_name || '_pkey PRIMARY KEY (id)'
                     || ') INHERITS (gpm.' || new_master_table_name || ');';
         RAISE NOTICE '%: %', timeofday(), script_text;
         EXECUTE script_text;
 
         -- Insert rows
         RAISE NOTICE '%: Inserting rows into child table', timeofday();
-        part_data_sel_date_constraint_text := 'asim.' || master_table_part_col_name || ' >= TO_DATE(''' || partition_start_date || ''', ''YYYY-MM-DD'') '
-                              || 'AND ' || 'asim.' || master_table_part_col_name || ' < TO_DATE(''' || partition_next_start_date || ''', ''YYYY-MM-DD'')';
+        part_data_sel_date_constraint_text := FORMAT(constraint_text_format, 'asim.' || master_table_part_col_name, partition_start_date, 'asim.' || master_table_part_col_name, partition_next_start_date);
         script_text := 'INSERT INTO gpm.' || child_table_name || ' '
                     || 'SELECT aso.*, asim.createddate AS ' || date_range_part_col_name || ' '
                     || 'FROM gpm.' || master_table_name || ' aso '
@@ -216,11 +213,11 @@ BEGIN
     start_year := EXTRACT(YEAR FROM min_createddate);
     start_quarter := EXTRACT(QUARTER FROM min_createddate);
     WHILE (start_year * 10 + start_quarter) <= (curr_year * 10 + curr_quarter) LOOP
-        partition_start_date = TO_CHAR(TO_DATE(start_year || '-' || (((start_quarter - 1) * 3) + 1) || '-1', 'YYYY-MM-DD'), 'YYYY-MM-DD');
+        partition_start_date = start_year || '-' || (((start_quarter - 1) * 3) + 1) || '-1';
         partition_next_start_date = TO_CHAR(partition_start_date + interval '3 months', 'YYYY-MM-DD');
+
         child_table_name := master_table_name || '_' || start_year || 'q' || start_quarter;
-        check_constraint_text := date_range_part_col_name || ' >= TO_DATE(''' || partition_start_date || ''', ''YYYY-MM-DD'') '
-                              || 'AND ' || date_range_part_col_name || ' < TO_DATE(''' || partition_next_start_date || ''', ''YYYY-MM-DD'')';
+        check_constraint_text := FORMAT(constraint_text_format, date_range_part_col_name, partition_start_date, date_range_part_col_name, partition_next_start_date);
 
         -- Create indexes
         RAISE NOTICE '%: Creating indexes', timeofday();
