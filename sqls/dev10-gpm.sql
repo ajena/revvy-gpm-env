@@ -1,10 +1,8 @@
--- SELECT COUNT(1) FROM gpm.mnadvsimulationoutput__c;
--- 2,152
+-- SELECT COUNT(id) FROM gpm.mnadvsimulationoutput__c;
+-- 2,334
 
--- SELECT COUNT(1) FROM ONLY gpm.mnadvsimulationoutput__c;
+-- SELECT COUNT(id) FROM ONLY gpm.mnadvsimulationoutput__c;
 -- 0
-
--- SELECT 1 FROM ONLY gpm.mnadvsimulationoutput__c;
 
 -- SELECT to_char(asim.createddate, 'YYYYQ'), COUNT(aso.id)
 -- FROM   gpm.mnadvsimulationoutput__c aso
@@ -218,7 +216,33 @@
 -- LIMIT 325
 
 
-create table gpm.mnadvsimulationoutput__c_old_copy
-(like gpm.mnadvsimulationoutput__c_old including defaults)
+-- create table gpm.mnadvsimulationoutput__c_old_copy
+-- (like gpm.mnadvsimulationoutput__c_old including defaults)
 
-alter table gpm.mnadvsimulationoutput__c_old rename to mnadvsimulationoutput__c
+-- alter table gpm.mnadvsimulationoutput__c_old rename to mnadvsimulationoutput__c
+
+select createddate from gpm.mnadvsimulation__c where sfid = 'a0P3700000CSgRsEAL'
+-- "2018-05-08 03:42:52"
+
+set constraint_exclusion = partition
+
+explain analyze select * from gpm.mnadvsimulationoutput__c 
+where mnadvsimulation__c = 'a0P3700000CSgRsEAL'
+
+explain analyze select * from gpm.mnadvsimulationoutput__c 
+where mnadvsimulation__c = 'a0P3700000CSgRsEAL'
+and mnadvsimcreateddate__c = '2018-05-08 03:42:52'
+
+explain analyze select * from gpm.mnadvsimulationoutput__c 
+where mnadvsimulation__c = 'a0P3700000CSgRsEAL'
+and mnadvsimcreateddate__c >= '2018-04-01'
+
+explain analyze select * from gpm.mnadvsimulationoutput__c 
+where mnadvsimulation__c = 'a0P3700000CSgRsEAL'
+and mnadvsimcreateddate__c >= '2018-04-01' and mnadvsimcreateddate__c < '2018-07-01'
+
+explain select count(*) from gpm.mnadvsimulationoutput__c 
+where mnadvsimcreateddate__c >= '2018-04-01'
+
+show constraint_exclusion
+

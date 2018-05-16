@@ -36,8 +36,7 @@ $$ LANGUAGE plpgsql;
 --  7. Verify partitioned data integrity
 --  8. Create Indexes, INSERT rules and CHECK constraints.
 --  9. Rename tables so that mnadvsimulation__c_new becomes mnadvsimulation__c
--- 10. Turn on constraint_exclusion.
--- 11. Resume INSERT/DELETE on mnadvsimulationoutput__c table.
+-- 10. Resume INSERT/DELETE on mnadvsimulationoutput__c table.
 --
 DO $PARTITION_MNADVSIMULATIONOUTPUT$
 DECLARE
@@ -247,14 +246,6 @@ BEGIN
             || sim_table_fk_name,
             'idx_' || child_table_name_for_index || '_forecastdate_sim'
         );
-        RAISE NOTICE '%: Creating Index - %', timeofday(), 'idx_' || child_table_name_for_index || '_partkey ON ' || child_table_name
-                                        || '(' || date_range_part_col_name || ')';
-        PERFORM gpm.create_index_if_not_exists(
-            'btree',
-            child_table_name,
-            date_range_part_col_name,
-            'idx_' || child_table_name_for_index || '_partkey'
-        );
 
         -- Add CHECK constraint
         script_text := 'ALTER TABLE gpm.' || child_table_name || ' '
@@ -293,12 +284,7 @@ BEGIN
     EXECUTE script_text;
 
 
-    -- 10. Turn on constraint_exclusion.
-    RAISE NOTICE '%: Turning on constraint exclusion', timeofday();
-    SET constraint_exclusion = on;
-
-
-    -- 11. Resume INSERT/DELETE on mnadvsimulationoutput__c table.
+    -- 10. Resume INSERT/DELETE on mnadvsimulationoutput__c table.
     RAISE NOTICE '%: Resuming INSERT/DELETE on %', timeofday(), master_table_name;
     script_text := 'DROP RULE ' || master_table_name || '_insert_disable ON gpm.' || master_table_name || '_old';
     RAISE NOTICE '%: %', timeofday(), script_text;
