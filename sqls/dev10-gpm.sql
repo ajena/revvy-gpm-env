@@ -38,24 +38,24 @@
 -- "20171"	 "352"
 -- "20172"	"1498"
 
--- SELECT COUNT(*) FROM gpm.mnadvsimulationoutput__c 
+-- SELECT COUNT(*) FROM gpm.mnadvsimulationoutput__c
 -- WHERE mnadvsimulation__c NOT IN (
 --     SELECT sfid FROM gpm.mnadvsimulation__c
 -- );
 -- 23891
 
--- SELECT COUNT(*) FROM gpm.mnadvsimulationoutputpart__c 
+-- SELECT COUNT(*) FROM gpm.mnadvsimulationoutputpart__c
 -- WHERE mnadvsimulation__c NOT IN (
 --     SELECT sfid FROM gpm.mnadvsimulation__c
 -- );
 -- 23891
 
--- DELETE FROM gpm.mnadvsimulationoutputpart__c 
+-- DELETE FROM gpm.mnadvsimulationoutputpart__c
 -- WHERE mnadvsimulation__c NOT IN (
 --     SELECT sfid FROM gpm.mnadvsimulation__c
 -- );
 
--- DELETE FROM gpm.mnadvsimulationoutput__c 
+-- DELETE FROM gpm.mnadvsimulationoutput__c
 -- WHERE mnadvsimulation__c NOT IN (
 --     SELECT sfid FROM gpm.mnadvsimulation__c
 -- );
@@ -82,7 +82,7 @@
 --     SELECT sfid FROM gpm.mnadvsimulation__c
 -- );
 
--- SELECT asim.createddate 
+-- SELECT asim.createddate
 -- FROM gpm.mnadvsimulation__c asim
 -- ORDER BY asim.createddate LIMIT 1;
 -- 2016-06-28 21:33:08
@@ -116,14 +116,14 @@
 --   asvf.mnadvsimulation__c = 'a0P3700000CEpDtEAL'
 -- ORDER BY
 --   asvf.forecastdate__c
-  
--- DELETE  
+
+-- DELETE
 -- FROM
 --   gpm.mnadvsimvolumeforecast__c asvf
 -- WHERE
 --   asvf.id IN (10273, 10272, 10271, 10270)
 
--- SELECT 
+-- SELECT
 --   country.name,
 --   productsku.name,
 --   countrypricetype.channelpricetype__c,
@@ -139,20 +139,20 @@
 --   simulation_output.volume__c,
 --   simulation_output.price__c,
 --   simulation_output.listprice__c
--- FROM 
---   gpm.mnadvsimulationoutput__c simulation_output, 
---   gpm.mncountryproductsku__c countryproductsku, 
---   gpm.mncountrypricetype__c countrypricetype, 
---   gpm.mnproductsku__c productsku, 
---   gpm.mnproduct__c product, 
---   gpm.mncountry__c country 
--- WHERE 
+-- FROM
+--   gpm.mnadvsimulationoutput__c simulation_output,
+--   gpm.mncountryproductsku__c countryproductsku,
+--   gpm.mncountrypricetype__c countrypricetype,
+--   gpm.mnproductsku__c productsku,
+--   gpm.mnproduct__c product,
+--   gpm.mncountry__c country
+-- WHERE
 --   simulation_output.mnadvsimulation__c = 'a0P3700000CEpDtEAL'
---   AND simulation_output.mncountryproductsku__c = countryproductsku.sfid 
---   AND simulation_output.mncountrypricetype__c = countrypricetype.sfid 
---   AND simulation_output.mncountry__c = country.sfid 
---   AND countryproductsku.mnproductsku__c = productsku.sfid 
---   AND productsku.mnproduct__c = product.sfid 
+--   AND simulation_output.mncountryproductsku__c = countryproductsku.sfid
+--   AND simulation_output.mncountrypricetype__c = countrypricetype.sfid
+--   AND simulation_output.mncountry__c = country.sfid
+--   AND countryproductsku.mnproductsku__c = productsku.sfid
+--   AND productsku.mnproduct__c = product.sfid
 --   AND simulation_output.listpricetype__c = true
 -- ORDER BY
 --   simulation_output.countryorder__c NULLS LAST,
@@ -176,7 +176,7 @@
 --   asim.lastmodifieddate DESC
 
 
--- SELECT 
+-- SELECT
 --   country.name AS "Country",
 --   --productsku.name AS "Product SKU",
 --   countrypricetype.channelpricetype__c AS "Channel Price Type",
@@ -185,20 +185,20 @@
 --   simulation_output.revenueafterimpact__c || ' ' || simulation_output.currencyisocode AS "Gross Revenue",
 --   simulation_output.netprice__c || ' ' || simulation_output.currencyisocode AS "Net Price",
 --   simulation_output.netrevenueafterimpact__c || ' ' || simulation_output.currencyisocode AS "Net Revenue"
--- FROM 
---   gpm.mnadvsimulationoutput__c simulation_output, 
---   gpm.mncountryproductsku__c countryproductsku, 
---   gpm.mncountrypricetype__c countrypricetype, 
---   gpm.mnproductsku__c productsku, 
---   gpm.mnproduct__c product, 
---   gpm.mncountry__c country 
--- WHERE 
+-- FROM
+--   gpm.mnadvsimulationoutput__c simulation_output,
+--   gpm.mncountryproductsku__c countryproductsku,
+--   gpm.mncountrypricetype__c countrypricetype,
+--   gpm.mnproductsku__c productsku,
+--   gpm.mnproduct__c product,
+--   gpm.mncountry__c country
+-- WHERE
 --   simulation_output.mnadvsimulation__c = 'a0P3700000CSgRsEAL'
---   AND simulation_output.mncountryproductsku__c = countryproductsku.sfid 
---   AND simulation_output.mncountrypricetype__c = countrypricetype.sfid 
---   AND simulation_output.mncountry__c = country.sfid 
---   AND countryproductsku.mnproductsku__c = productsku.sfid 
---   AND productsku.mnproduct__c = product.sfid 
+--   AND simulation_output.mncountryproductsku__c = countryproductsku.sfid
+--   AND simulation_output.mncountrypricetype__c = countrypricetype.sfid
+--   AND simulation_output.mncountry__c = country.sfid
+--   AND countryproductsku.mnproductsku__c = productsku.sfid
+--   AND productsku.mnproduct__c = product.sfid
 --   --AND simulation_output.listpricetype__c = true
 --   AND simulation_output.forecastdate__c = '2018-03-16'
 -- ORDER BY
@@ -230,22 +230,22 @@ select createddate from gpm.mnadvsimulation__c where sfid = 'a0P3700000CSgRsEAL'
 
 set constraint_exclusion = partition
 
-explain select * from gpm.mnadvsimulationoutput__c 
+explain select * from gpm.mnadvsimulationoutput__c
 where mnadvsimulation__c = 'a0P3700000CSgRsEAL'
 
-explain select * from gpm.mnadvsimulationoutput__c 
+explain select * from gpm.mnadvsimulationoutput__c
 where mnadvsimulation__c = 'a0P3700000CSgRsEAL'
 and mnadvsimcreateddate__c = '2018-05-08 03:42:52'
 
-explain select * from gpm.mnadvsimulationoutput__c 
+explain select * from gpm.mnadvsimulationoutput__c
 where mnadvsimulation__c = 'a0P3700000CSgRsEAL'
 and mnadvsimcreateddate__c >= '2018-04-01'
 
-explain select * from gpm.mnadvsimulationoutput__c 
+explain select * from gpm.mnadvsimulationoutput__c
 where mnadvsimulation__c = 'a0P3700000CSgRsEAL'
 and mnadvsimcreateddate__c >= '2018-04-01' and mnadvsimcreateddate__c < '2018-07-01'
 
-explain select count(*) from gpm.mnadvsimulationoutput__c 
+explain select count(*) from gpm.mnadvsimulationoutput__c
 where mnadvsimcreateddate__c >= '2018-04-01'
 
 show constraint_exclusion
@@ -277,4 +277,48 @@ CREATE TABLE test.mnadvsim_2018q2 (
 
 explain analyze select count(*) from test.mnadvsim
 where createddate = '2018-05-10'
+
+
+-- GLE Output
+SELECT c.name, lso.mnirp__month__c, lso.currencyisocode,
+    lso.mnirp__listprice__c, lse.mnirp__eventtype__c, lso.mnirp__eventdetail__c
+FROM gpm.mnirp__mnlsosimoutput__c lso
+INNER JOIN gpm.mnirp__mncountry__c c ON lso.mnirp__mncountry__c = c.sfid
+LEFT OUTER JOIN gpm.mnirp__mnlsosimevent__c lse ON lso.mnirp__mnlsosimevent__c = lse.sfid
+WHERE lso.mnirp__mnlsosim__c = 'a207E000001Q4sDQAS'
+AND c.name IN ('Australia')
+ORDER BY c.name, lso.mnirp__month__c
+
+-- GLE Output (Product Launch event months only)
+SELECT c.name, lso.mnirp__month__c, lso.currencyisocode,
+    lso.mnirp__listprice__c, lse.mnirp__eventtype__c, lso.mnirp__eventdetail__c
+FROM gpm.mnirp__mnlsosimoutput__c lso
+INNER JOIN gpm.mnirp__mncountry__c c ON lso.mnirp__mncountry__c = c.sfid
+LEFT OUTER JOIN gpm.mnirp__mnlsosimevent__c lse ON lso.mnirp__mnlsosimevent__c = lse.sfid
+WHERE lso.mnirp__mnlsosim__c = 'a207E000001Q4sDQAS'
+AND lse.mnirp__eventtype__c IN ('Product Launch')
+ORDER BY c.name, lso.mnirp__month__c
+
+-- GLE Output (Product Launch event months only) vs Launch Setup
+SELECT c.name, lso.mnirp__month__c, lso.currencyisocode,
+    lso.mnirp__listprice__c, lse.mnirp__eventtype__c, lso.mnirp__eventdetail__c,
+    lse.currencyisocode, lse.mnirp__mandatedprice__c, lse.mnirp__minprice__c, lse.mnirp__maxprice__c
+FROM gpm.mnirp__mnlsosimoutput__c lso
+INNER JOIN gpm.mnirp__mncountry__c c ON lso.mnirp__mncountry__c = c.sfid
+LEFT OUTER JOIN gpm.mnirp__mnlsosimevent__c lse ON lso.mnirp__mnlsosimevent__c = lse.sfid
+WHERE lso.mnirp__mnlsosim__c = 'a207E000001Q4sDQAS'
+AND lse.mnirp__eventtype__c IN ('Product Launch')
+ORDER BY c.name, lso.mnirp__month__c
+
+-- GLE Output (Product Launch event months only) vs Launch Setup (with Mandatory Price only)
+SELECT c.name, lso.mnirp__month__c, lso.currencyisocode,
+    lso.mnirp__listprice__c, lse.mnirp__eventtype__c, lso.mnirp__eventdetail__c,
+    lse.currencyisocode, lse.mnirp__mandatedprice__c, lse.mnirp__minprice__c, lse.mnirp__maxprice__c
+FROM gpm.mnirp__mnlsosimoutput__c lso
+INNER JOIN gpm.mnirp__mncountry__c c ON lso.mnirp__mncountry__c = c.sfid
+LEFT OUTER JOIN gpm.mnirp__mnlsosimevent__c lse ON lso.mnirp__mnlsosimevent__c = lse.sfid
+WHERE lso.mnirp__mnlsosim__c = 'a207E000001Q4sDQAS'
+AND lse.mnirp__eventtype__c IN ('Product Launch')
+AND lse.mnirp__mandatedprice__c IS NOT NULL
+ORDER BY c.name, lso.mnirp__month__c
 

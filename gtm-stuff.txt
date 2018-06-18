@@ -1,0 +1,14 @@
+# Deploy to your Org
+https://revvy-modeln.atlassian.net/wiki/spaces/RCPQ/pages/45056053/Deploy+on+your+ORG
+
+# Redeploy to Org
+https://revvy-modeln.atlassian.net/wiki/spaces/TM/pages/86871232/Redeploy+Org
+
+# How to articles
+https://revvy-modeln.atlassian.net/wiki/spaces/TM/pages/83871654/How+To+Articles
+
+# GTM Dev/QA Orgs
+https://revvy-modeln.atlassian.net/wiki/spaces/TM/pages/83723360/GTM+DEV+QA+orgs
+
+# Revvy CPQ QA Org Setup
+https://docs.google.com/document/d/1Um-MthbqFTQRrfWs5wCsiagQ939uTuPOHagwNyQVfb4/edit

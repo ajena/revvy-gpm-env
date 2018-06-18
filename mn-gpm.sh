@@ -64,6 +64,11 @@ function git_ignore() {
     git update-index --assume-unchanged $filepath
 }
 
+function revert_stylecss() {
+    echo "git checkout 'InternationalReferencePricing/modules/ui/ui/staticresources/UIResource/css/style.css'"
+    git checkout 'InternationalReferencePricing/modules/ui/ui/staticresources/UIResource/css/style.css'
+}
+
 function rebase() {
     curr_branch=$(git branch | grep "*" | sed 's/\*//g' | xargs)
     echo
@@ -71,8 +76,7 @@ function rebase() {
     echo
 	git fetch --prune
 	echo
-	echo "git checkout ."
-	git checkout .
+	revert_files
 	echo
     echo "git pull --rebase origin $curr_branch"
     echo
