@@ -5,6 +5,7 @@ export LC_ALL="en_US.UTF-8"
 export SF_BUILD_ROOT=$DEV_ROOT/github/revvy-gpm/InternationalReferencePricing
 export PATH=$SF_BUILD_ROOT/build/ui/node_modules/grunt-cli/bin:$PATH
 
+alias git-base="cd $DEV_ROOT/github"
 alias sf-git="cd $DEV_ROOT/github/revvy-gpm"
 alias heroku-git="cd $DEV_ROOT/github/revvy-gpm-heroku"
 alias env-git="cd $DEV_ROOT/github/revvy-gpm-env"
