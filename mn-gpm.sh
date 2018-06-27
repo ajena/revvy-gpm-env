@@ -68,7 +68,7 @@ function git_ignore() {
 
 function revert_stylecss() {
     git_topdir=$(git rev-parse --show-toplevel)
-    file=$git_topdir/modules/ui/ui/staticresources/UIResource/css/style.css
+    file=$git_topdir/InternationalReferencePricing/modules/ui/ui/staticresources/UIResource/css/style.css
     if [ -e "$file" ]; then
         echo
         echo "git checkout $file"
