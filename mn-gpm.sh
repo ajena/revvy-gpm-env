@@ -9,6 +9,7 @@ alias git-base="cd $DEV_ROOT/github"
 alias sf-git="cd $DEV_ROOT/github/revvy-gpm"
 alias heroku-git="cd $DEV_ROOT/github/revvy-gpm-heroku"
 alias env-git="cd $DEV_ROOT/github/revvy-gpm-env"
+alias git-base="cd $DEV_ROOT/github; export SF_BUILD_ROOT=$DEV_ROOT/github/nimbus"
 alias ws-eclipse="cd $DEV_ROOT/workspace/eclipse/"
 
 alias master="git checkout master"
