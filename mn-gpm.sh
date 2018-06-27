@@ -67,8 +67,14 @@ function git_ignore() {
 }
 
 function revert_stylecss() {
-    echo "git checkout 'InternationalReferencePricing/modules/ui/ui/staticresources/UIResource/css/style.css'"
-    git checkout 'InternationalReferencePricing/modules/ui/ui/staticresources/UIResource/css/style.css'
+    git_topdir=$(git rev-parse --show-toplevel)
+    file=$git_topdir/modules/ui/ui/staticresources/UIResource/css/style.css
+    if [ -e "$file" ]; then
+        echo
+        echo "git checkout $file"
+        git checkout $file
+        echo
+    fi
 }
 
 function rebase() {
@@ -77,10 +83,8 @@ function rebase() {
     echo "git fetch --prune"
     echo
 	git fetch --prune
-	echo
-	revert_files
-	echo
-    echo "git pull --rebase origin $curr_branch"
+	revert_stylecss
+	echo "git pull --rebase origin $curr_branch"
     echo
     git pull --rebase origin $curr_branch
 	echo
