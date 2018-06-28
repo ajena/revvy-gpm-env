@@ -9,3 +9,15 @@ WbYbICLrNuSH8AzOuWek9bs2
 GTM TSO
 admin@revvygpm.com
 Global2015
+
+Dev/QA ORG3
+admin@gtmqa239.pd/modeln@123/5DGmeoFcqLiJFTEXrjrtLeGp
+tmadmin@gtmqa239.pd/modeln@123
+tmrep@gtmqa239.pd/modeln@123
+lotapprover@gtmqa239.pd/modeln@123
+
+GTM Dev/QA ORG1
+qadev29tm@modeln.com/Admin@12345
+tmadmin@modeln.com/Admin@54321
+tmrep@modeln.com/modeln@321
+lotapprovalmanager@modeln.com/Test12345
