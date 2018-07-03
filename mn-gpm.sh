@@ -33,15 +33,25 @@ function logs_heroku() {
 
 function gitlog() {
     n=10
-    if [ "$#" != 0 ]
-        then n=$1
+    branch=""
+
+    if [ "$#" != 0  ]
+    then
+        re='^[0-9]+$'
+        if [[ $1 =~ $re ]]
+        then
+            n="$1"
+            branch="$2"
+        else
+            branch="$1"
+        fi
     fi
 
     echo
-    git status
+    git status $branch
     echo
 
-    git log -"$n" --date=local --pretty="%C(auto)%h (%<(20,trunc)%aN %cd) %<(100,trunc)%s" $2
+    git log -"$n" --date=local --pretty="%C(auto)%h (%<(20,trunc)%aN %cd) %<(100,trunc)%s" $branch
 }
 
 function gitamend() {
