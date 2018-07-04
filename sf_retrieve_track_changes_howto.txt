@@ -1,0 +1,19 @@
+reate a local remote git
+mkdir -p ~/dev/git/localremotegit [# Provide a directory path that you want to behave as your local remote git.]
+cd ~/dev/git/localremotegit
+git init --bare
+
+#2. Pull everything from your salesforce org to a local directory (let's say @ ~/dev/workspace/eclipse/revvygpm). Now, add git behavior to this directory.
+cd ~/dev/workspace/eclipse/revvygpm
+git init
+
+#3. Do a 'git status' and you'll see all files and directories as new.
+
+#4. Use 'git add' to add all these new files and directories.
+
+#5. Add a reference to the remote dir in the current repository.
+git remote add origin ~/dev/git/localremotegit
+
+#6. Commit and push the new repository.
+git commit -m "Initial setup" [# Some commit message.]
+git push origin master

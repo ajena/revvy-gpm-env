@@ -140,6 +140,7 @@ function set_git_topdir() {
 # USAGE(for UI code deployment) : deploy aj_sf2 UIResource/**/*
 function deploy() {
     eval "invokeAntTask deployMnForce $*"
+    revert_stylecss
 }
 
 function deployAndTest() {
