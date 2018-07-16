@@ -195,7 +195,16 @@ function invokeAntTask() {
 	cached_pwd=$(pwd)
 
     # Now change the directory to the one that contains the build.xml file
-    eval "cd $git_topdir/InternationalReferencePricing/build/bin"
+
+    file=$git_topdir/InternationalReferencePricing/build/bin
+    if [ -e "$file" ]
+    then
+        eval "cd $git_topdir/InternationalReferencePricing/build/bin"
+    else
+        eval "cd $git_topdir/build/bin"
+    fi
+
+    #eval "cd $git_topdir/InternationalReferencePricing/build/bin"
 
     # Invoke the ant target
     if [ $# -eq 2 ]
