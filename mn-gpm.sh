@@ -13,6 +13,7 @@ alias git-base="cd $DEV_ROOT/github; export SF_BUILD_ROOT=$DEV_ROOT/github/nimbu
 alias ws-eclipse="cd $DEV_ROOT/workspace/eclipse/"
 
 alias master="git checkout master"
+alias base031="git checkout Base031"
 
 alias meld="$DEV_ROOT/tools/diff/Meld/Meld.exe"
 
