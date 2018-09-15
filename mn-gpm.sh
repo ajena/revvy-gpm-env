@@ -103,10 +103,23 @@ function rebase() {
 
 function push() {
     curr_branch=$(git branch | grep "*" | sed 's/\*//g' | xargs)
+    if [[ $curr_branch = *"RGPM"* ]];
+    then
+        echo
+        echo "git push origin $curr_branch $*"
+        echo
+	    #git push origin $curr_branch $*
+    else
+        echo "Please check whether the branch $curr_branch is correct!"
+    fi
+}
+
+function push_origin() {
+    curr_branch=$(git branch | grep "*" | sed 's/\*//g' | xargs)
     echo
     echo "git push origin $curr_branch $*"
     echo
-	git push origin $curr_branch $*
+    git push origin $curr_branch $*
 }
 
 function pushlocal() {
@@ -115,7 +128,7 @@ function pushlocal() {
     git push
 }
 
-function pushheroku() {
+function push_heroku() {
     heroku_app=$1
 	if [ "$heroku_app" == "" ]
 	    then
