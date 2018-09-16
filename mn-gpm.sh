@@ -108,7 +108,7 @@ function push() {
         echo
         echo "git push origin $curr_branch $*"
         echo
-	    #git push origin $curr_branch $*
+	    git push origin $curr_branch $*
     else
         echo "Please check whether the branch $curr_branch is correct!"
     fi
