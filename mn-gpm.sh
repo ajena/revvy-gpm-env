@@ -101,6 +101,18 @@ function rebase() {
 	echo
 }
 
+function rebase_master() {
+    echo
+    echo "git fetch --prune"
+    echo
+    git fetch --prune
+    revert_stylecss
+    echo "git pull --rebase origin master"
+    echo
+    git pull --rebase origin master
+    echo
+}
+
 function push() {
     curr_branch=$(git branch | grep "*" | sed 's/\*//g' | xargs)
     if [[ $curr_branch = *"RGPM"* ]];
@@ -177,23 +189,30 @@ function prepareUI() {
     eval "invokeAntTask prepareUI $*"
 }
 
+function generateLabelService() {
+    eval "invokeAntTask generateLabelService $*"
+}
+
+function printAntUsage() {
+    echo "USAGE: invokeAntTask [cleanMnForce|deployMnForce|deployAndTestMnForce|importAll|deleteAll|prepareUI|generateLabelService] <sf.propfile_name>"
+    echo "E.g., invokeAntTask deployMnForce aj_sf"
+}
+
 function invokeAntTask() {
     # Check for required number of arguments
     if [ "$#" -lt 2 ]
         then
         echo
-        echo "USAGE: invokeAntTask [cleanMnForce|deployMnForce|deployAndTestMnForce|importAll|deleteAll] <sf.propfile_name>"
-        echo "E.g., invokeAntTask deployMnForce aj_sf"
+        printAntUsage
         return
     fi
 
     # Check for valid ant target
-    if [ "$1" != "cleanMnForce" ] && [ "$1" != "deployMnForce" ] && [ "$1" != "deployAndTestMnForce" ] && [ "$1" != "importAll" ] && [ "$1" != "deleteAll" ] && [ "$1" != "prepareUI" ]
+    if [ "$1" != "cleanMnForce" ] && [ "$1" != "deployMnForce" ] && [ "$1" != "deployAndTestMnForce" ] && [ "$1" != "importAll" ] && [ "$1" != "deleteAll" ] && [ "$1" != "prepareUI" ] && [ "$1" != "generateLabelService" ]
         then
         echo
         echo "Invalid ant target '$1'"
-        echo "USAGE: invokeAntTask [cleanMnForce|deployMnForce|deployAndTestMnForce|importAll|deleteAll|prepareUI] <sf.propfile_name>"
-        echo "E.g., invokeAntTask deployMnForce aj_sf"
+        printAntUsage
         return
     fi
 
