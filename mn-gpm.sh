@@ -126,7 +126,7 @@ function push() {
     fi
 }
 
-function push_origin() {
+function push_force() {
     curr_branch=$(git branch | grep "*" | sed 's/\*//g' | xargs)
     echo
     echo "git push origin $curr_branch $*"
