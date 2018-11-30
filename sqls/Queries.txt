@@ -1,0 +1,16 @@
+------------------------
+-- mnadvsimulationlog__c
+------------------------
+
+SELECT name AS "PROCESS NAME"
+    , gpmnightly__startdatetime__c AS "START TIME"
+    , gpmnightly__enddatetime__c AS "END TIME"
+    , gpmnightly__action__c AS "ACTION"
+    , gpmnightly__numberoftimes__c AS "OCCURRENCES"
+    , ROUND(CAST(gpmnightly__serverduration__c/1000 AS DECIMAL), 4) AS "SERVER TIME (Seconds)"
+    , ROUND(CAST(gpmnightly__serverduration__c/60000 AS DECIMAL), 4) AS "SERVER TIME (Minutes)"
+    , ROUND(CAST(gpmnightly__queryduration__c/1000 AS DECIMAL), 4) AS "QUERY TIME (Seconds)"
+    , ROUND(CAST(gpmnightly__queryduration__c/60000 AS DECIMAL), 4) AS "QUERY TIME (Minutes)"
+FROM gpm.gpmnightly__mnadvsimulationlog__c
+WHERE gpmnightly__mnadvsimulation__c = 'a1l4A00000NWiYgQAL'
+ORDER BY gpmnightly__startdatetime__c
