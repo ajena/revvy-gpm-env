@@ -38,3 +38,7 @@ ant -Dsf.files=UIResource/**/* deployMnForce
 deploy aj_sf2 UIResource/**/*
 
 ?nooverride=0
+
+POSTGRESQL
+----------
+SHOW enable_nestloop;
