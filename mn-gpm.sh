@@ -80,15 +80,23 @@ function git_ignore() {
     git update-index --assume-unchanged $filepath
 }
 
-function revert_stylecss() {
+function checkout_unwanted_modified_files() {
+    declare -a filepaths=(
+                      "InternationalReferencePricing/modules/ui/ui/staticresources/UIResource/css/style.css"
+                      "InternationalReferencePricing/uimodules/package-lock.json"
+                     )
+
     git_topdir=$(git rev-parse --show-toplevel)
-    file=$git_topdir/InternationalReferencePricing/modules/ui/ui/staticresources/UIResource/css/style.css
-    if [ -e "$file" ]; then
-        echo
-        echo "git checkout $file"
-        git checkout $file
-        echo
-    fi
+
+    echo
+    for filepath in "${filepaths[@]}"
+    do
+        file=$git_topdir/$filepath
+        if [ -e "$file" ]; then
+            echo "git checkout $file"
+            git checkout $file
+        fi
+    done
 }
 
 function rebase() {
@@ -97,7 +105,7 @@ function rebase() {
     echo "git fetch --prune"
     echo
 	git fetch --prune
-	revert_stylecss
+	checkout_unwanted_modified_files
 	echo "git pull --rebase origin $curr_branch"
     echo
     git pull --rebase origin $curr_branch
@@ -109,7 +117,7 @@ function rebase_master() {
     echo "git fetch --prune"
     echo
     git fetch --prune
-    revert_stylecss
+    checkout_unwanted_modified_files
     echo "git pull --rebase origin master"
     echo
     git pull --rebase origin master
@@ -169,7 +177,7 @@ function set_git_topdir() {
 # USAGE(for UI code deployment) : deploy aj_sf2 UIResource/**/*
 function deploy() {
     eval "invokeAntTask deployMnForce $*"
-    revert_stylecss
+    checkout_unwanted_modified_files
 }
 
 function deployAndTest() {
