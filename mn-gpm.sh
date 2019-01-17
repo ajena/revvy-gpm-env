@@ -106,9 +106,14 @@ function rebase() {
     echo
 	git fetch --prune
 	checkout_unwanted_modified_files
-	echo "git pull --rebase origin $curr_branch"
+    base_branch=$1
+    if [ "$base_branch" == "" ]
+        then
+        base_branch=$curr_branch
+    fi
+	echo "git pull --rebase origin $base_branch"
     echo
-    git pull --rebase origin $curr_branch
+    git pull --rebase origin $base_branch
 	echo
 }
 
