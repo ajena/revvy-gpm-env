@@ -82,8 +82,9 @@ function git_ignore() {
 
 function checkout_unwanted_modified_files() {
     declare -a filepaths=(
-                      "InternationalReferencePricing/modules/ui/ui/staticresources/UIResource/css/style.css"
-                      "InternationalReferencePricing/uimodules/package-lock.json"
+                        "InternationalReferencePricing/modules/ui/ui/staticresources/UIResource/css/style.css"
+                        "InternationalReferencePricing/uimodules/package-lock.json",
+                        "InternationalReferencePricing/uimodules/yarn.lock"
                      )
 
     git_topdir=$(git rev-parse --show-toplevel)
