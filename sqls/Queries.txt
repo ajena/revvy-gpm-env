@@ -13,7 +13,7 @@ SELECT name AS "PROCESS NAME"
     , ROUND(CAST(gpmnightly__queryduration__c/60000 AS DECIMAL), 4) AS "QUERY TIME (Minutes)"
 FROM gpm.gpmnightly__mnadvsimulationlog__c
 WHERE gpmnightly__mnadvsimulation__c = 'a1l4A00000NWiYgQAL'
-ORDER BY gpmnightly__startdatetime__c
+ORDER BY GREATEST(gpmnightly__serverduration__c, gpmnightly__queryduration__c) DESC
 
 
 -----------------
@@ -31,4 +31,4 @@ SELECT name AS "PROCESS NAME"
     , ROUND(CAST(gpmnightly__queryduration__c/60000 AS DECIMAL), 4) AS "QUERY TIME (Minutes)"
 FROM gpm.gpmnightly__mnlsosimlog__c
 WHERE gpmnightly__mnlsosim__c = 'a1l4A00000NWiYgQAL'
-ORDER BY gpmnightly__startdatetime__c
+ORDER BY GREATEST(gpmnightly__serverduration__c, gpmnightly__queryduration__c) DESC
