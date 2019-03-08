@@ -104,7 +104,6 @@ function rebase() {
     curr_branch=$(git branch | grep "*" | sed 's/\*//g' | xargs)
     echo
     echo "git fetch --prune"
-    echo
 	git fetch --prune
 	checkout_unwanted_modified_files
     base_branch=$1
@@ -115,7 +114,6 @@ function rebase() {
 	echo "git pull --rebase origin $base_branch"
     echo
     git pull --rebase origin $base_branch
-	echo
 }
 
 function rebase_master() {
