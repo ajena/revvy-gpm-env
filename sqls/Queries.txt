@@ -32,3 +32,31 @@ SELECT name AS "PROCESS NAME"
 FROM gpm.gpmnightly__mnlsosimlog__c
 WHERE gpmnightly__mnlsosim__c = 'a1l4A00000NWiYgQAL'
 ORDER BY GREATEST(gpmnightly__serverduration__c, gpmnightly__queryduration__c) DESC
+
+
+---------------------------
+-- mnadvsimulationoutput__c
+---------------------------
+
+SELECT
+    aso.id,
+    c.name AS "COUNTRY",
+    p.name AS "PRODUCT FAMILY",
+    ps.name AS "PRODUCT SKU",
+    cpt.channelpricetype__c AS "CHANNEL PRICE TYPE",
+    aso.forecastdate__c AS "FORECAST MONTH",
+    aso.currencyisocode AS "CURRENCY",
+    aso.listprice__c AS "LIST PRICE",
+    aso.additionalinfo__c AS "ADDITIONAL INFO"
+FROM gpm.mnadvsimulationoutput__c aso
+INNER JOIN gpm.mncountry__c c ON aso.mncountry__c = c.sfid
+INNER JOIN gpm.mncountryproductsku__c cps ON aso.mncountryproductsku__c = cps.sfid
+INNER JOIN gpm.mnproductsku__c ps ON cps.mnproductsku__c = ps.sfid
+INNER JOIN gpm.mnproduct__c p ON ps.mnproduct__c = p.sfid
+INNER JOIN gpm.mncountrypricetype__c cpt ON aso.mncountrypricetype__c = cpt.sfid
+WHERE aso.mnadvsimulation__c = 'a0P1G00000DGT3fUAH'
+AND aso.forecastdate__c = '2018-07-16'
+ORDER BY
+    aso.countryorder__c,
+    c.name,
+    ps.name
